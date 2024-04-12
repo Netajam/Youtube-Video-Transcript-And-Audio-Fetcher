@@ -68,6 +68,7 @@ Replace `'video_id'`, `'video_id_1'`, `'video_id_2'`, and `'channel_id'` with th
      ```
      python main.py -pl
      ```
+5. To include timestamps in the downloaded transcripts, add the `-ts` or `--timestamps` flag when running the script:
 
 The transcripts will be saved as Markdown files in the project directory with sanitized filenames.
 
