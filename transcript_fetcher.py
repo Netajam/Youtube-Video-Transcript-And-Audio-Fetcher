@@ -2,7 +2,7 @@ import os
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
-from file_utils import save_transcript_to_markdown, sanitize_filename
+from file_utils import save_transcript_to_markdown, sanitize_filename, save_video_link_to_markdown
 from youtube_api import get_uploads_playlist_id, get_playlist_videos
 
 api_key = os.environ.get("youtube_api_key")
@@ -33,9 +33,9 @@ def process_video_transcript_to_markdown(video_id, include_timestamps=False):
     if transcript != 'Transcript not available':
         title = get_video_title(video_id)
         save_transcript_to_markdown(video_id, transcript, title, include_timestamps)
+        save_video_link_to_markdown(video_id, title)
     else:
         print(f"Unable to fetch transcript for video ID {video_id}.")
-
 
 def fetch_single_transcript(video_id, include_timestamps=False):
     process_video_transcript_to_markdown(video_id, include_timestamps)
@@ -56,4 +56,3 @@ def fetch_playlist_transcripts(playlist_id, include_timestamps=False):
     for video in videos:
         video_id = video['snippet']['resourceId']['videoId']
         process_video_transcript_to_markdown(video_id, include_timestamps)
-
