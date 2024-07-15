@@ -3,15 +3,15 @@ from pytube import YouTube
 from youtube_api import get_uploads_playlist_id, get_playlist_videos
 from googleapiclient.discovery import build
 from moviepy.editor import AudioFileClip
-
+from config import audio_files_path
 
 api_key = os.environ.get("youtube_api_key")
 youtube = build('youtube', 'v3', developerKey=api_key)
+
 def create_audio_folder():
-    audio_folder = "generated_audio"
-    if not os.path.exists(audio_folder):
-        os.makedirs(audio_folder)
-    return audio_folder
+    if not os.path.exists(audio_files_path):
+        os.makedirs(audio_files_path)
+    return audio_files_path
 
 def download_audio(video_url, output_path):
     try:
@@ -34,6 +34,7 @@ def download_audio(video_url, output_path):
         print("Audio downloaded and converted to MP3 successfully!")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+
 def download_single_audio(video_id):
     audio_folder = create_audio_folder()
     video_url = f"https://www.youtube.com/watch?v={video_id}"
