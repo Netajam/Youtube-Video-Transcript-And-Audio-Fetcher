@@ -4,6 +4,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from file_utils import save_transcript_to_markdown, sanitize_filename, save_video_link_to_markdown
 from youtube_api import get_uploads_playlist_id, get_playlist_videos
+from config import  language_to_fetch
 
 api_key = os.environ.get("youtube_api_key")
 youtube = build('youtube', 'v3', developerKey=api_key)
@@ -11,7 +12,7 @@ youtube = build('youtube', 'v3', developerKey=api_key)
 def get_video_transcript(video_id, include_timestamps=False):
     try:
         transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-        transcript = transcript_list.find_transcript(['en']).fetch()
+        transcript = transcript_list.find_transcript([language_to_fetch]).fetch()
         if include_timestamps:
             transcript_text = '\n'.join([f"[{format_timestamp(item['start'])}] {item['text']}" for item in transcript])
         else:

@@ -1,5 +1,5 @@
 # Single video ID
-video_id = 'LV_r2ahaKto'
+video_id = 'KkCXLABwHP0'
 
 # Multiple video IDs
 video_ids = ['abc123', 'def456', 'ghi789']
@@ -8,6 +8,7 @@ video_ids = ['abc123', 'def456', 'ghi789']
 channel_id = 'UCQNsB8n2QhRzjdfjyZ_2S_g'
 
 playlist_id= 'PLAzuPFpwy9ZLIG5hDwjGyccJr6FpTsrEr'
+playlist_id= 'PL6-yiYT82epjJiRbrsEIak-Z-vKC94ahK'
 
 # File paths
 transcript_files_path = 'transcripts'  # Path where transcript files will be saved
@@ -17,4 +18,7 @@ templates_path = 'templates'  # Path where template files are located
 
 # Template file names
 transcript_template_file = 'transcript_template.md'
-summary_template_file = 'summary_template.md'
+summary_template_file = 'summary_template_spanish.md'
+
+# Transcript
+language_to_fetch='es'
