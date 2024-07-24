@@ -92,3 +92,38 @@ Download transcript and audio for a single video:
 If you have any questions or issues, please feel free to open an issue in the repository.
 
 [The "Finding Video ID, Channel ID, and Playlist ID" section remains the same as in the original README]
+
+# Language code
+- English: `en`
+- Spanish: `es`
+- French: `fr`
+- German: `de`
+- Chinese (Simplified): `zh-CN`
+- Chinese (Traditional): `zh-TW`
+- Japanese: `ja`
+- Korean: `ko`
+- Portuguese: `pt`
+- Russian: `ru`
+- Arabic: `ar`
+- Hindi: `hi`
+- Italian: `it`
+- Dutch: `nl`
+- Swedish: `sv`
+- Turkish: `tr`
+- Polish: `pl`
+- Danish: `da`
+- Finnish: `fi`
+- Greek: `el`
+- Hebrew: `he`
+- Hungarian: `hu`
+- Norwegian: `no`
+- Romanian: `ro`
+- Thai: `th`
+- Czech: `cs`
+- Bulgarian: `bg`
+- Slovak: `sk`
+- Ukrainian: `uk`
+- Malay: `ms`
+- Vietnamese: `vi`
+- Indonesian: `id`
+
