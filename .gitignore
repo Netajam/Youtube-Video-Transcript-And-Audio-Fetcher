@@ -30,6 +30,8 @@ summaries/
 audio/
 transcripts/
 summary/
+merged_transcripts/
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
