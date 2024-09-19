@@ -1,5 +1,8 @@
 from googleapiclient.discovery import build
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 api_key = os.environ.get("youtube_api_key")
 

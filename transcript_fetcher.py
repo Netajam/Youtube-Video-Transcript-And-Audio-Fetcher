@@ -5,6 +5,8 @@ from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFoun
 from file_utils import save_transcript_to_markdown, sanitize_filename, save_video_link_to_markdown
 from youtube_api import get_uploads_playlist_id, get_playlist_videos
 from config import  language_to_fetch
+from dotenv import load_dotenv
+load_dotenv()
 
 api_key = os.environ.get("youtube_api_key")
 youtube = build('youtube', 'v3', developerKey=api_key)

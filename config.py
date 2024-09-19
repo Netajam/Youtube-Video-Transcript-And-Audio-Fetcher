@@ -1,5 +1,5 @@
 # Single video ID
-video_id = 'KkCXLABwHP0'
+video_id = 'e049IoFBnLA'
 
 # Multiple video IDs
 video_ids = ['abc123', 'def456', 'ghi789']
@@ -18,7 +18,7 @@ templates_path = 'templates'  # Path where template files are located
 
 # Template file names
 transcript_template_file = 'transcript_template.md'
-summary_template_file = 'summary_template_spanish.md'
+summary_template_file = 'summary_template.md'
 
 # Transcript
-language_to_fetch='es'
+language_to_fetch='en'
