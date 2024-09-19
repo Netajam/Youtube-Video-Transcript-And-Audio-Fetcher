@@ -21,7 +21,7 @@ Before using this tool, make sure you have the following:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/RenardDuDesert/Youtube-Video-Transcript-Fetcher.git
+   git clone https://github.com/Netajam/Youtube-Video-Transcript-Fetcher.git
    ```
 2. Navigate to the project directory.
 3. (Optional but recommended) Create a Python virtual environment using `python3 -m venv venv`.
@@ -30,10 +30,10 @@ Before using this tool, make sure you have the following:
    - On macOS and Linux: `source venv/bin/activate`
 5. Install the required dependencies using `pip install -r requirements.txt`.
 6. Set the Google YouTube API key as an environment variable.
-
+   - Create a `.env` file with the 'youtube_api_key = "YOUR_YOUTUBE_API_KEY"
 ## Configuration
 
-Create a `config.py` file in the project directory and add the following variables:
+Use the config.py file to put the values of the video_id, channel_id, playlist_id that you want to fetch.Create a `config.py` file in the project directory and add the following variables:
 ```python
 # config.py
 
@@ -91,4 +91,3 @@ Download transcript and audio for a single video:
 
 If you have any questions or issues, please feel free to open an issue in the repository.
 
-[The "Finding Video ID, Channel ID, and Playlist ID" section remains the same as in the original README]
