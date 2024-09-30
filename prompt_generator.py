@@ -6,10 +6,13 @@ from googleapiclient.discovery import build
 from video_details_fetcher import YouTubeVideoProcessor
 import re
 from transcript_fetcher import TranscriptFetcher
+import shutil
+from config import transcript_parts_dir
 
 class PromptGenerator:
     def __init__(self, character_limit):
         self.character_limit = character_limit
+        self.output_dir=transcript_parts_dir
 
     def parse_transcript_with_timestamps(self, transcript_text):
         """
@@ -148,16 +151,32 @@ class PromptGenerator:
 
         return transcript_parts
 
-    def generate_markdown_files(self, transcript_parts_with_chapters, output_dir="transcript_prompts"):
+    def generate_markdown_files(self, transcript_parts_with_chapters, video_title):
         """
         Generate a markdown file for each part of the transcript with prompt instructions, chapters, and transcript text.
         The transcript_parts_with_chapters is a list of tuples: (chapters, transcript_part).
         """
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        
+        # Ensure the output directory is empty
+        if os.path.exists(self.output_dir):
+            # Remove all files and directories in output_dir
+            for filename in os.listdir(self.output_dir):
+                file_path = os.path.join(self.output_dir, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)  # Remove the file
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)  # Remove the directory
+                except Exception as e:
+                    print(f"Failed to delete {file_path}. Reason: {e}")
 
+        # Create the output directory if it doesn't exist
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
+        # Generate markdown files
         for idx, (chapters, part) in enumerate(transcript_parts_with_chapters):
-            filename = os.path.join(output_dir, f"transcript_part_{idx + 1}.md")
+            filename = os.path.join(self.output_dir, f"Tr-{video_title}-P{idx + 1}.md")
 
             with open(filename, 'w') as file:
                 file.write("## Prompt Instruction\n")

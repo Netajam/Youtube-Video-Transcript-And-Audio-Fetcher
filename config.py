@@ -1,5 +1,5 @@
 # Single video ID
-video_id = 'cLVdsZ3I5os'
+video_id = 'O9upVbGSBFo'
 
 # Multiple video IDs
 video_ids = ['abc123', 'def456', 'ghi789']
@@ -15,10 +15,14 @@ transcript_files_path = 'transcripts'  # Path where transcript files will be sav
 summary_files_path = 'summaries'  # Path where summary files will be saved
 audio_files_path = 'audio'  # Path where audio files will be saved
 templates_path = 'templates'  # Path where template files are located
-
+transcript_parts_dir ='temp/transcript_parts'
+gpt_summaries="summaries_gpt"
 # Template file names
 transcript_template_file = 'transcript_template.md'
 summary_template_file = 'summary_template.md'
 
 # Transcript
 language_to_fetch='en'
+
+# GPT
+openai_model = "gpt-4o"

@@ -26,10 +26,14 @@ share/python-wheels/
 *.egg
 MANIFEST
 myenv/
+# Folder to ignore
 summaries/
 audio/
 transcripts/
 summary/
+temp/
+merged_transcripts/
+summaries/gpt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

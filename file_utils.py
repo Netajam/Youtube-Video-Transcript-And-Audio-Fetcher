@@ -2,8 +2,7 @@ import os
 import re
 from config import transcript_files_path, summary_files_path, templates_path, transcript_template_file, summary_template_file
 
-def save_transcript_to_markdown(video_id, transcript, title, include_timestamps=False):
-    sanitized_title = sanitize_filename(title)
+def save_transcript_to_markdown(video_id, transcript, sanitized_title, include_timestamps=False):
     filename = f"Tr-{sanitized_title}.md"
     video_url = f"https://www.youtube.com/watch?v={video_id}"
     
@@ -16,7 +15,7 @@ def save_transcript_to_markdown(video_id, transcript, title, include_timestamps=
         transcript = transcript.replace('\n', ' ')
     
     filled_template = template_content.format(
-        title=title,
+        title=sanitized_title,
         video_url=video_url,
         transcript=transcript
     )
