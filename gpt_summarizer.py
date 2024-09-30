@@ -112,7 +112,7 @@ class GPTSummarizer:
         if not os.path.exists(self.output_folder_combined):
             os.makedirs(self.output_folder_combined)
         # Save all the responses to a combined summary file in the correct order
-        summary_filename=f"{self.output_folder_combined}/SM-GPT-{filename}"
+        summary_filename=f"{self.output_folder_combined}/SM-GPT-{filename}.md"
         summary_template_file=f"{summary_files_path}/VD-SM-{filename}.md"
         self.markdown_writer.write_content_to_file(summary_template_file,summary_filename)
         try:
