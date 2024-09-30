@@ -4,8 +4,8 @@ from prompt_generator import PromptGenerator
 from playlists import Playlist
 from gpt_summarizer import GPTSummarizer  # Import GPTSummarizer
 import asyncio
-from file_utils import sanitize_filename
-
+from file_utils import MarkdownWriter
+from config import templates_path
 class VideoFetcher:
     def __init__(self, video_id, youtube_client,openai_api_key=None):
         self.video_id = video_id
@@ -15,7 +15,8 @@ class VideoFetcher:
         self.youtube_video_processor = YouTubeVideoProcessor(self.video_id, self.youtube)
         self.prompt_generator = PromptGenerator(32000)
         self.playlist = Playlist(self.youtube)
-        self.gpt_summarizer = GPTSummarizer(self.openai_api_key)  # Initialize GPTSummarizer
+        self.gpt_summarizer = GPTSummarizer(self.openai_api_key) 
+        self.markdown_writer= MarkdownWriter()
     def set_openai_api_key(self, new_api_key):
         self._openai_api_key = new_api_key
         # Update the API key in the GPTSummarizer instance as well
@@ -32,7 +33,7 @@ class VideoFetcher:
         Fetch a single transcript and optionally generate prompts and GPT summaries.
         """
         video_title = self.get_video_title(video_id)
-        video_title=sanitize_filename(video_title)
+        video_title=self.markdown_writer.sanitize_filename(video_title)
         # Fetch and save the transcript to markdown
         self.transcript_fetcher.save_full_transcript2md(self.video_id,video_title, include_timestamps)
 

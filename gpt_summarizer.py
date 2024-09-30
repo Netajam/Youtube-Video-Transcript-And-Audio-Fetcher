@@ -5,7 +5,8 @@ import aiohttp
 import asyncio
 from dotenv import load_dotenv
 import time
-from config import transcript_parts_dir, gpt_summaries, openai_model
+from config import transcript_parts_dir, gpt_summaries_combined, gpt_summaries_parts, openai_model, templates_path, summary_template_file, summary_files_path
+from file_utils import MarkdownWriter
 
 class GPTSummarizer:
     def __init__(self, api_key, model=openai_model):
@@ -13,14 +14,27 @@ class GPTSummarizer:
         openai.api_key = api_key
         self.model = model
         self.prompt_folder = transcript_parts_dir  # Folder containing markdown prompt files
-        self.output_folder = gpt_summaries  # Folder to store the summary files
-        self.combined_summary_file = os.path.join(self.output_folder, "combined_summary.md")  # Combined summary file
+        self.output_folder_parts = gpt_summaries_parts  # Folder to store the summary files # Combined summary file
+        self.output_folder_combined = gpt_summaries_combined  # Combined summary file
         self.responses = []  # To store all responses in order
-        self.token_limit_per_minute = 30000
+        self.token_limit_per_minute = self.token_limit()
         self.token_count = 0
         self.start_time = time.time()
         self.lock = asyncio.Lock()  # A lock to safely manage token reservations
+        self.markdown_writer=MarkdownWriter()
     
+    def token_limit(self):
+        match self.model:
+            case "gpt-4o":
+                token_limit = 30000
+            case "gpt-4o-mini":
+                token_limit = 200000
+            case "gpt-4o-mini-2024-07-18":
+                token_limit=200000
+            case _:
+                token_limit = 30000  # Default value
+        return token_limit
+
     def set_openai_api_key(self, new_api_key):
         openai.api_key = new_api_key
         
@@ -83,21 +97,29 @@ class GPTSummarizer:
 
     async def save_to_markdown(self, response, filename):
         # Function to save the response to a markdown file asynchronously
+        if not os.path.exists(self.output_folder_combined):
+            os.makedirs(self.output_folder_combined)
         try:
-            output_file = os.path.join(self.output_folder, filename)
-            with open(output_file, "w") as md_file:
+            output_file = os.path.join(self.output_folder_parts, filename)
+            with open(output_file,"w", encoding='utf-8') as md_file:
                 md_file.write(f"{response}\n")
             print(f"Markdown file '{output_file}' created successfully.")
         except Exception as e:
             print(f"Error while saving to markdown: {e}")
 
     async def save_combined_summary(self, filename):
+        # Ensure the output_folder_combined exists
+        if not os.path.exists(self.output_folder_combined):
+            os.makedirs(self.output_folder_combined)
         # Save all the responses to a combined summary file in the correct order
+        summary_filename=f"{self.output_folder_combined}/SM-GPT-{filename}"
+        summary_template_file=f"{summary_files_path}/VD-SM-{filename}.md"
+        self.markdown_writer.write_content_to_file(summary_template_file,summary_filename)
         try:
-            with open(self.combined_summary_file, "w") as combined_file:
+            with open(summary_filename, "w",  encoding='utf-8') as combined_file:
                 for response in self.responses:
                     combined_file.write(f"{response}\n\n")
-            print(f"All responses saved to combined summary file: {self.combined_summary_file}")
+            print(f"All responses saved to combined summary file:summary_filename")
         except Exception as e:
             print(f"Error while saving combined summary: {e}")
 
@@ -119,8 +141,8 @@ class GPTSummarizer:
 
     async def process_prompt_files(self,video_title):
         # Function to process all markdown prompt files concurrently and in order
-        if not os.path.exists(self.output_folder):
-            os.makedirs(self.output_folder)
+        if not os.path.exists(self.output_folder_parts):
+            os.makedirs(self.output_folder_parts)
 
         prompt_files = glob.glob(os.path.join(self.prompt_folder, "*.md"))
         self.responses = [None] * len(prompt_files)  # Pre-allocate a list to store responses in order

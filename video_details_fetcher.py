@@ -3,8 +3,9 @@ import re
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
-from file_utils import save_transcript_to_markdown, save_video_link_to_markdown
+from file_utils import MarkdownWriter
 from dotenv import load_dotenv
+from config import templates_path
 
 
 class YouTubeVideoProcessor:
@@ -13,6 +14,7 @@ class YouTubeVideoProcessor:
         self.video_id = video_id
         self.youtube = youtube_client
         self.video_details = None
+        self.markdown_writer=MarkdownWriter()
         
     def fetch_video_details(self):
         """Fetches video details including the title, description, and other snippet info"""
@@ -53,8 +55,8 @@ class YouTubeVideoProcessor:
         transcript = self.get_video_transcript(include_timestamps)
         if transcript != 'Transcript not available':
             title = self.get_video_title()
-            save_transcript_to_markdown(self.video_id, transcript, title, include_timestamps)
-            save_video_link_to_markdown(self.video_id, title)
+            self.markdown_writer.save_transcript_to_markdown(self.video_id, transcript, title, include_timestamps)
+            self.markdown_writer.save_video_link_to_markdown(self.video_id, title)
         else:
             print(f"Unable to fetch transcript for video ID {self.video_id}.")
 

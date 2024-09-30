@@ -1,10 +1,11 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
-from file_utils import save_transcript_to_markdown, save_video_link_to_markdown,sanitize_filename
-
+from file_utils import MarkdownWriter
+from config import templates_path
 class TranscriptFetcher:
     def __init__(self, youtube_client):
         self.youtube = youtube_client
+        self.markdown_writer=MarkdownWriter()
     def get_video_transcript(self,video_id,video_title, include_timestamps=False):
         try:
             transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
@@ -26,7 +27,7 @@ class TranscriptFetcher:
         transcript = self.get_video_transcript(video_id, include_timestamps, video_title)
         if transcript != 'Transcript not available':
             
-            save_transcript_to_markdown(video_id, transcript, video_title, include_timestamps)
-            save_video_link_to_markdown(video_id, video_title)
+            self.markdown_writer.save_transcript_to_markdown(video_id, transcript, video_title, include_timestamps)
+            self.markdown_writer.save_video_link_to_markdown(video_id, video_title)
         else:
             print(f"Unable to fetch transcript for video ID {video_id}.")
