@@ -1,6 +1,6 @@
 import os
 import re
-from config import TRANSCRIPT_FILES_PATH, SUMMARY_FILES_PATH, TEMPLATES_PATH, TRANSCRIPT_TEMPLATE_FILE, SUMMARY_TEMPLATE_FILE
+from config import TRANSCRIPT_FILES_DIR, SUMMARY_FILES_DIR, TEMPLATES_DIR, TRANSCRIPT_TEMPLATE_FILE, SUMMARY_TEMPLATE_FILE
 
 class MarkdownWriter:
     
@@ -20,7 +20,7 @@ class MarkdownWriter:
 
     # Function to load and fill a template
     def fill_template(self, template_name, **kwargs):
-        template_path = os.path.join(TEMPLATES_PATH, template_name)
+        template_path = os.path.join(TEMPLATES_DIR, template_name)
         template_content = self.read_template(template_path)
         return template_content.format(**kwargs)
 
@@ -39,7 +39,7 @@ class MarkdownWriter:
     def format_save_transcript(self, video_id, transcript, title, include_timestamps=False):
         filename, filled_template = self.format_transcript(video_id, transcript, title, include_timestamps)
         
-        file_path = self.write_to_md(TRANSCRIPT_FILES_PATH, filename, filled_template)
+        file_path = self.write_to_md(TRANSCRIPT_FILES_DIR, filename, filled_template)
         print(f"Transcript saved to {file_path}.")
 
     def format_transcript(self, video_id, transcript, title, include_timestamps):
@@ -63,7 +63,7 @@ class MarkdownWriter:
     def format_save_summary(self, video_id, title):
         filename, filled_template = self.format_summary(video_id, title)
         
-        file_path = self.write_to_md(SUMMARY_FILES_PATH, filename, filled_template)
+        file_path = self.write_to_md(SUMMARY_FILES_DIR, filename, filled_template)
         print(f"Video link summary saved to {file_path}.")
 
     def format_summary(self, video_id, title):
@@ -81,7 +81,7 @@ class MarkdownWriter:
 
 if __name__ == "__main__":
     # Initialize the markdown writer with the templates path
-    markdown_writer = MarkdownWriter(TEMPLATES_PATH)
+    markdown_writer = MarkdownWriter(TEMPLATES_DIR)
     
     # Example of saving a transcript
     video_id = "abcd1234"

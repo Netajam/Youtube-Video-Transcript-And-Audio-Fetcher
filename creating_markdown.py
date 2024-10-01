@@ -1,6 +1,6 @@
 import csv
 import os
-from config import TRANSCRIPT_FILES_PATH, SUMMARY_FILES_PATH, TEMPLATES_PATH, transcript_template_file, SUMMARY_TEMPLATE_FILE
+from config import TRANSCRIPT_FILES_DIR, SUMMARY_FILES_DIR, TEMPLATES_DIR, transcript_template_file, SUMMARY_TEMPLATE_FILE
 
 def sanitize_filename(filename):
     # Replace forbidden characters with an underscore
@@ -15,12 +15,12 @@ def read_template(template_path):
 
 def create_markdown_files(csv_file_path, limit=900):
     # Ensure the output directories exist
-    os.makedirs(TRANSCRIPT_FILES_PATH, exist_ok=True)
-    os.makedirs(SUMMARY_FILES_PATH, exist_ok=True)
+    os.makedirs(TRANSCRIPT_FILES_DIR, exist_ok=True)
+    os.makedirs(SUMMARY_FILES_DIR, exist_ok=True)
 
     # Read templates
-    transcript_template = read_template(os.path.join(TEMPLATES_PATH, transcript_template_file))
-    summary_template = read_template(os.path.join(TEMPLATES_PATH, SUMMARY_TEMPLATE_FILE))
+    transcript_template = read_template(os.path.join(TEMPLATES_DIR, transcript_template_file))
+    summary_template = read_template(os.path.join(TEMPLATES_DIR, SUMMARY_TEMPLATE_FILE))
 
     with open(csv_file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
@@ -33,7 +33,7 @@ def create_markdown_files(csv_file_path, limit=900):
             
             # Create transcript file
             transcript_filename = f"SwiftUI-Tr-{video_number}-{sanitized_title}.md"
-            transcript_file_path = os.path.join(TRANSCRIPT_FILES_PATH, transcript_filename)
+            transcript_file_path = os.path.join(TRANSCRIPT_FILES_DIR, transcript_filename)
             
             filled_transcript_template = transcript_template.format(
                 title=row['Title'],
@@ -46,7 +46,7 @@ def create_markdown_files(csv_file_path, limit=900):
 
             # Create summary file
             summary_filename = f"SwiftUI-SM-{video_number}-{sanitized_title}.md"
-            summary_file_path = os.path.join(SUMMARY_FILES_PATH, summary_filename)
+            summary_file_path = os.path.join(SUMMARY_FILES_DIR, summary_filename)
             
             filled_summary_template = summary_template.format(
                 title=row['Title'],
@@ -56,7 +56,7 @@ def create_markdown_files(csv_file_path, limit=900):
             with open(summary_file_path, 'w', encoding='utf-8') as md_file:
                 md_file.write(filled_summary_template)
 
-    print(f'Markdown files have been created in the "{TRANSCRIPT_FILES_PATH}" and "{SUMMARY_FILES_PATH}" directories with a limit of {limit} files.')
+    print(f'Markdown files have been created in the "{TRANSCRIPT_FILES_DIR}" and "{SUMMARY_FILES_DIR}" directories with a limit of {limit} files.')
 
 # Example usage
 csv_file_path = 'video_details.csv'  # Update this to the path of your CSV file

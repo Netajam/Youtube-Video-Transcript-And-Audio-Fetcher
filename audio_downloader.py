@@ -2,7 +2,7 @@ import os
 from pytube import YouTube
 from playlists import Playlist
 from moviepy.editor import AudioFileClip
-from config import AUDIO_FILES_PATH
+from config import AUDIO_FILES_DIR
 
 
 class AudioDownloader:
@@ -11,9 +11,9 @@ class AudioDownloader:
         self.playlist=Playlist(self.youtube)
 
     def create_audio_folder():
-        if not os.path.exists(AUDIO_FILES_PATH):
-            os.makedirs(AUDIO_FILES_PATH)
-        return AUDIO_FILES_PATH
+        if not os.path.exists(AUDIO_FILES_DIR):
+            os.makedirs(AUDIO_FILES_DIR)
+        return AUDIO_FILES_DIR
 
     def download_audio(video_url, output_path):
         try:

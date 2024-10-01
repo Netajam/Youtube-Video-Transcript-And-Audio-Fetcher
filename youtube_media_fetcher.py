@@ -20,7 +20,7 @@ class YoutubeMediaFetcher:
     def set_openai_api_key(self, new_api_key):
         self._openai_api_key = new_api_key
         # Update the API key in the GPTSummarizer instance as well
-        self.gpt_summarizer.set_openai_api_key(new_api_key)
+        self.gpt_summarizer.api_key = new_api_key
     def get_openai_api_key(self):
         return self._openai_api_key
     def get_video_title(self,video_id):
@@ -30,7 +30,7 @@ class YoutubeMediaFetcher:
 
     def process_single_video(self,video_id, include_timestamps=False, generate_prompt=False, generate_gpt_summary=False):
         """
-        Either fetch the full transcript, generate the prompts or GPT summary
+        Either fetch the fetch and save the transcript, generate the prompts or save the transcript and the GPT summary
         """
         if not generate_prompt and not generate_gpt_summary:
             print("Fetching video transcript...")

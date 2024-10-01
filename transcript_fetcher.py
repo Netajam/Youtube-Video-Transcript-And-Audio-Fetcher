@@ -42,3 +42,4 @@ class TranscriptFetcher:
             self.markdown_writer.format_save_transcript(video_id, transcript, video_title, include_timestamps)
         else:
             print(f"No transcript to save for video: {video_id}.")
+        return transcript

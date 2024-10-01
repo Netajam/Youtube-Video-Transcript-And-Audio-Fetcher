@@ -5,46 +5,39 @@ import aiohttp
 import asyncio
 from dotenv import load_dotenv
 import time
-from config import TRANSCRIPT_PARTS_DIR, GPT_SUMMARIES_COMBINED, GPT_SUMMARIES_PARTS, OPENAI_MODEL, TEMPLATES_PATH, SUMMARY_TEMPLATE_FILE, SUMMARY_FILES_PATH
-from file_utils import MarkdownWriter
+from config import TRANSCRIPT_PARTS_DIR, GPT_SUMMARIES_COMBINED_DIR, GPT_SUMMARIES_PARTS_DIR, OPENAI_MODEL, TEMPLATES_DIR, SUMMARY_TEMPLATE_FILE, SUMMARY_FILES_DIR ,CHARACTER_PER_TOKEN
+from file_utils import MarkdownWriter 
+from constant import MODEL_TOKEN_LIMITS
 
 class GPTSummarizer:
-    def __init__(self, api_key, model=OPENAI_MODEL):
-        # Initialize with the OpenAI API key and model version
-        openai.api_key = api_key
+    def __init__(self, api_key, model=OPENAI_MODEL, prompt_folder=TRANSCRIPT_PARTS_DIR, output_folder_parts=GPT_SUMMARIES_PARTS_DIR, output_folder_combined=GPT_SUMMARIES_COMBINED_DIR, character_per_token=CHARACTER_PER_TOKEN):
+        self.api_key = api_key
         self.model = model
-        self.prompt_folder = TRANSCRIPT_PARTS_DIR  # Folder containing markdown prompt files
-        self.output_folder_parts = GPT_SUMMARIES_PARTS  # Folder to store the summary files # Combined summary file
-        self.output_folder_combined = GPT_SUMMARIES_COMBINED  # Combined summary file
-        self.responses = []  # To store all responses in order
-        self.token_limit_per_minute = self.token_limit()
+        self.prompt_folder = prompt_folder
+        self.output_folder_parts = output_folder_parts
+        self.output_folder_combined = output_folder_combined
+        self.responses = []
+        self._character_per_token = character_per_token
+        self.token_limit_per_minute = self.get_token_limit()
         self.token_count = 0
         self.start_time = time.time()
-        self.lock = asyncio.Lock()  # A lock to safely manage token reservations
-        self.markdown_writer=MarkdownWriter()
+        self.lock = asyncio.Lock()
+        self.markdown_writer = MarkdownWriter()
     
-    def token_limit(self):
-        match self.model:
-            case "gpt-4o":
-                token_limit = 30000
-            case "gpt-4o-mini":
-                token_limit = 200000
-            case "gpt-4o-mini-2024-07-18":
-                token_limit=200000
-            case _:
-                token_limit = 30000  # Default value
-        return token_limit
+    @property
+    def api_key(self):
+        return self._api_key
 
-    def set_openai_api_key(self, new_api_key):
+    @api_key.setter
+    def api_key(self, new_api_key):
+        self._api_key = new_api_key
         openai.api_key = new_api_key
-        
-    def get_openai_api_key(self):
-        return openai.api_key
+    
+    def get_token_limit(self):
+        return MODEL_TOKEN_LIMITS.get(self.model, 30000)
     
     def count_tokens(self, prompt):
-        # Simple token estimator based on character length
-        # Assuming 4 characters per token (which is rough, but conservative)
-        return len(prompt) // 4
+        return len(prompt) // self._character_per_token
 
     async def reserve_tokens(self, token_count):
         async with self.lock:
@@ -113,7 +106,7 @@ class GPTSummarizer:
             os.makedirs(self.output_folder_combined)
         # Save all the responses to a combined summary file in the correct order
         summary_filename=f"{self.output_folder_combined}/SM-GPT-{filename}.md"
-        SUMMARY_TEMPLATE_FILE=f"{SUMMARY_FILES_PATH}/VD-SM-{filename}.md"
+        SUMMARY_TEMPLATE_FILE=f"{SUMMARY_FILES_DIR}/VD-SM-{filename}.md"
         self.markdown_writer.write_content_to_file(SUMMARY_TEMPLATE_FILE,summary_filename)
         try:
             with open(summary_filename, "w",  encoding='utf-8') as combined_file:

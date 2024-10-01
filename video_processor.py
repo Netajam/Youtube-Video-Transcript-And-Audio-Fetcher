@@ -5,7 +5,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from file_utils import MarkdownWriter
 from dotenv import load_dotenv
-from config import TEMPLATES_PATH
+from config import TEMPLATES_DIR
 
 
 class VideoProcessor:
