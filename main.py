@@ -1,6 +1,6 @@
 import argparse
-from config import video_id, video_ids, channel_id, playlist_id
-from video_fetcher import VideoFetcher
+from config import VIDEO_ID, VIDEO_IDS, CHANNEL_ID, PLAYLIST_ID
+from youtube_media_fetcher import YoutubeMediaFetcher
 from audio_downloader import AudioDownloader
 from gpt_summarizer import GPTSummarizer  # Import the GPTSummarizer class
 import os
@@ -26,27 +26,27 @@ def main():
     if args.audio:
         audio_downloader = AudioDownloader(youtube)
         if args.multiple:
-            audio_downloader.download_multiple_audios(video_ids)
+            audio_downloader.download_multiple_audios(VIDEO_IDS)
         elif args.channel:
-            audio_downloader.download_channel_audios(channel_id)
+            audio_downloader.download_channel_audios(CHANNEL_ID)
         elif args.playlist:
-            audio_downloader.download_playlist_audios(playlist_id)
+            audio_downloader.download_playlist_audios(PLAYLIST_ID)
         else:
-            audio_downloader.download_single_audio(video_id)
+            audio_downloader.download_single_audio(VIDEO_ID)
     else:
-        video_fetcher = VideoFetcher(video_id, youtube)
+        video_fetcher = YoutubeMediaFetcher(VIDEO_ID, youtube)
         if args.multiple:
-            video_fetcher.fetch_multiple_transcripts(video_ids, args.timestamps)
+            video_fetcher.process_multiple_video(VIDEO_IDS, args.timestamps)
         elif args.channel:
-            video_fetcher.fetch_channel_transcripts(channel_id, args.timestamps)
+            video_fetcher.process_channel(CHANNEL_ID, args.timestamps)
         elif args.playlist:
-            video_fetcher.fetch_playlist_transcripts(playlist_id, args.timestamps)
+            video_fetcher.process_playlist(PLAYLIST_ID, args.timestamps)
         else:
             load_dotenv(override=True)
             openai_api_key = os.getenv("OPENAI_API_KEY")
             video_fetcher.set_openai_api_key(openai_api_key)
             print(video_fetcher.get_openai_api_key())
-            video_fetcher.fetch_single_transcript(video_id, args.timestamps, args.generate_prompt, args.generate_gpt_summary)  # Pass the new generate_gpt_summary flag
+            video_fetcher.process_single_video(VIDEO_ID, args.timestamps, args.generate_prompt, args.generate_gpt_summary)  # Pass the new generate_gpt_summary flag
 
 if __name__ == "__main__":
     main()

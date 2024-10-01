@@ -1,12 +1,14 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from file_utils import MarkdownWriter
-from config import templates_path
 class TranscriptFetcher:
+    _NO_TRANSCRIPT='Transcript not available'
+    
     def __init__(self, youtube_client):
         self.youtube = youtube_client
         self.markdown_writer=MarkdownWriter()
-    def get_video_transcript(self,video_id,video_title, include_timestamps=False):
+
+    def fetch_transcript(self,video_id, include_timestamps=False):
         try:
             transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
             transcript = transcript_list.find_transcript(['en']).fetch()
@@ -16,18 +18,27 @@ class TranscriptFetcher:
                 transcript_text = ' '.join([item['text'] for item in transcript])
             return transcript_text
         except (TranscriptsDisabled, NoTranscriptFound):
-            return 'Transcript not available'
+            return TranscriptFetcher._NO_TRANSCRIPT
 
     def format_timestamp(self,seconds):
         return f"{int(seconds // 3600):02d}:{int((seconds % 3600) // 60):02d}:{int(seconds % 60):02d}"
 
 
-    def save_full_transcript2md(self,video_id,video_title, include_timestamps=False):
+    def create_md_files(self,video_id,video_title, include_timestamps=False):
 
-        transcript = self.get_video_transcript(video_id, include_timestamps, video_title)
-        if transcript != 'Transcript not available':
+        transcript = self.fetch_transcript(video_id, include_timestamps)
+        if transcript != TranscriptFetcher._NO_TRANSCRIPT:
             
-            self.markdown_writer.save_transcript_to_markdown(video_id, transcript, video_title, include_timestamps)
-            self.markdown_writer.save_video_link_to_markdown(video_id, video_title)
+            self.markdown_writer.format_save_transcript(video_id, transcript, video_title, include_timestamps)
+            self.markdown_writer.format_save_summary(video_id, video_title)
         else:
-            print(f"Unable to fetch transcript for video ID {video_id}.")
+            print(f"No transcript to save for video: {video_id}.")
+            
+    def create_transcript_file(self,video_id,video_title, include_timestamps=False):
+
+        transcript = self.fetch_transcript(video_id, include_timestamps)
+        if transcript != TranscriptFetcher._NO_TRANSCRIPT:
+            
+            self.markdown_writer.format_save_transcript(video_id, transcript, video_title, include_timestamps)
+        else:
+            print(f"No transcript to save for video: {video_id}.")

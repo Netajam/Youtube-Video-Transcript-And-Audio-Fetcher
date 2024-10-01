@@ -5,17 +5,17 @@ import aiohttp
 import asyncio
 from dotenv import load_dotenv
 import time
-from config import transcript_parts_dir, gpt_summaries_combined, gpt_summaries_parts, openai_model, templates_path, summary_template_file, summary_files_path
+from config import TRANSCRIPT_PARTS_DIR, GPT_SUMMARIES_COMBINED, GPT_SUMMARIES_PARTS, OPENAI_MODEL, TEMPLATES_PATH, SUMMARY_TEMPLATE_FILE, SUMMARY_FILES_PATH
 from file_utils import MarkdownWriter
 
 class GPTSummarizer:
-    def __init__(self, api_key, model=openai_model):
+    def __init__(self, api_key, model=OPENAI_MODEL):
         # Initialize with the OpenAI API key and model version
         openai.api_key = api_key
         self.model = model
-        self.prompt_folder = transcript_parts_dir  # Folder containing markdown prompt files
-        self.output_folder_parts = gpt_summaries_parts  # Folder to store the summary files # Combined summary file
-        self.output_folder_combined = gpt_summaries_combined  # Combined summary file
+        self.prompt_folder = TRANSCRIPT_PARTS_DIR  # Folder containing markdown prompt files
+        self.output_folder_parts = GPT_SUMMARIES_PARTS  # Folder to store the summary files # Combined summary file
+        self.output_folder_combined = GPT_SUMMARIES_COMBINED  # Combined summary file
         self.responses = []  # To store all responses in order
         self.token_limit_per_minute = self.token_limit()
         self.token_count = 0
@@ -113,8 +113,8 @@ class GPTSummarizer:
             os.makedirs(self.output_folder_combined)
         # Save all the responses to a combined summary file in the correct order
         summary_filename=f"{self.output_folder_combined}/SM-GPT-{filename}.md"
-        summary_template_file=f"{summary_files_path}/VD-SM-{filename}.md"
-        self.markdown_writer.write_content_to_file(summary_template_file,summary_filename)
+        SUMMARY_TEMPLATE_FILE=f"{SUMMARY_FILES_PATH}/VD-SM-{filename}.md"
+        self.markdown_writer.write_content_to_file(SUMMARY_TEMPLATE_FILE,summary_filename)
         try:
             with open(summary_filename, "w",  encoding='utf-8') as combined_file:
                 for response in self.responses:

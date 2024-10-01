@@ -3,16 +3,16 @@ from dotenv import load_dotenv
 import os
 import re
 from googleapiclient.discovery import build
-from video_details_fetcher import YouTubeVideoProcessor
+from video_processor import VideoProcessor
 import re
 from transcript_fetcher import TranscriptFetcher
 import shutil
-from config import transcript_parts_dir
+from config import TRANSCRIPT_PARTS_DIR
 
 class PromptGenerator:
     def __init__(self, character_limit):
         self.character_limit = character_limit
-        self.output_dir=transcript_parts_dir
+        self.output_dir=TRANSCRIPT_PARTS_DIR
 
     def parse_transcript_with_timestamps(self, transcript_text):
         """
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     # 3. Fetch the raw transcript with timestamps using the original function
     transcript_fetcher=TranscriptFetcher(video_id, youtube)
-    raw_transcript = transcript_fetcher.get_video_transcript(video_id, include_timestamps=True)
+    raw_transcript = transcript_fetcher.fetch_transcript(video_id, include_timestamps=True)
     print("Raw transcript with timestamps:", raw_transcript)
 
     # 4. Create an instance of the PromptGenerator
@@ -221,8 +221,8 @@ if __name__ == "__main__":
     print("Parsed transcript:", transcript_with_timestamps)
 
     # 6. Fetch chapters (for simplicity, we simulate this here)
-    processor = YouTubeVideoProcessor(video_id, youtube)
-    chapters = processor.extract_chapters_from_description()
+    processor = VideoProcessor(video_id, youtube)
+    chapters = processor.get_chapters()
 
     # 7. Split transcript based on chapters or character limit
     transcript_parts_with_chapters = prompt_generator.split_by_chapters_or_limit(transcript_with_timestamps, chapters)

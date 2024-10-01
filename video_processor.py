@@ -5,10 +5,10 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from file_utils import MarkdownWriter
 from dotenv import load_dotenv
-from config import templates_path
+from config import TEMPLATES_PATH
 
 
-class YouTubeVideoProcessor:
+class VideoProcessor:
     
     def __init__(self, video_id, youtube_client):
         self.video_id = video_id
@@ -36,7 +36,7 @@ class YouTubeVideoProcessor:
             self.fetch_video_details()
         return self.video_details.get('title', '')
 
-    def extract_chapters_from_description(self):
+    def get_chapters(self):
         """Tries to extract chapters from the video description if timestamps are present"""
         description = self.get_video_description()
         # Look for timestamps in the format HH:MM:SS or MM:SS
@@ -55,8 +55,8 @@ class YouTubeVideoProcessor:
         transcript = self.get_video_transcript(include_timestamps)
         if transcript != 'Transcript not available':
             title = self.get_video_title()
-            self.markdown_writer.save_transcript_to_markdown(self.video_id, transcript, title, include_timestamps)
-            self.markdown_writer.save_video_link_to_markdown(self.video_id, title)
+            self.markdown_writer.format_save_transcript(self.video_id, transcript, title, include_timestamps)
+            self.markdown_writer.format_save_summary(self.video_id, title)
         else:
             print(f"Unable to fetch transcript for video ID {self.video_id}.")
 
@@ -89,14 +89,14 @@ if __name__ == "__main__":
     youtube = build('youtube', 'v3', developerKey=api_key)
     video_id = 'naed4C4hfAg'
 
-    processor = YouTubeVideoProcessor(video_id, youtube)
+    processor = VideoProcessor(video_id, youtube)
 
     # Fetch video description
     description = processor.get_video_description()
     print("Video Description:", description)
 
     # Extract and print video chapters
-    chapters = processor.extract_chapters_from_description()
+    chapters = processor.get_chapters()
     if chapters:
         print("Chapters found in description:")
         for chapter in chapters:

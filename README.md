@@ -78,21 +78,21 @@ playlist_id = 'PLAzuPFpwy9ZLIG5hDwjGyccJr6FpTsrEr'
 
 # File paths
 transcript_files_path = 'transcripts'  # Path where transcript files will be saved
-summary_files_path = 'summaries'  # Path where summary files will be saved
-audio_files_path = 'audio'  # Path where audio files will be saved
-templates_path = 'templates'  # Path where template files are located
-transcript_parts_dir = 'temp/transcript_parts'  # Path for temporary transcript parts
+SUMMARY_FILES_PATH = 'summaries'  # Path where summary files will be saved
+AUDIO_FILES_PATH = 'audio'  # Path where audio files will be saved
+TEMPLATES_PATH = 'templates'  # Path where template files are located
+TRANSCRIPT_PARTS_DIR = 'temp/transcript_parts'  # Path for temporary transcript parts
 gpt_summaries = 'summaries_gpt'  # Path for GPT summary files
 
 # Template file names
 transcript_template_file = 'transcript_template.md'
-summary_template_file = 'summary_template.md'
+SUMMARY_TEMPLATE_FILE = 'summary_template.md'
 
 # Transcript settings
 language_to_fetch = 'en'
 
 # GPT model configuration
-openai_model = "gpt-4o"
+OPENAI_MODEL = "gpt-4o"
 ```
 
 ## Templates
@@ -154,7 +154,7 @@ You can customize these templates to change the structure of the generated markd
 
 To generate summaries using GPT after the transcripts have been downloaded and processed:
 1. Ensure the OpenAI API key is set in the `.env` file.
-2. Set the `openai_model` and other GPT-related configurations in `config.py`.
+2. Set the `OPENAI_MODEL` and other GPT-related configurations in `config.py`.
 3. Run the script to generate summaries:
    ```bash
    python main.py --gpt
