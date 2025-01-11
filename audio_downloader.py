@@ -1,7 +1,7 @@
 import os
 from pytube import YouTube
 from playlists import Playlist
-from moviepy.editor import AudioFileClip
+from moviepy import AudioFileClip
 from config import AUDIO_FILES_DIR
 
 

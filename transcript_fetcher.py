@@ -1,6 +1,7 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 from file_utils import MarkdownWriter
+from config import LANGUAGE_TO_FETCH
 class TranscriptFetcher:
     _NO_TRANSCRIPT='Transcript not available'
     
@@ -11,7 +12,7 @@ class TranscriptFetcher:
     def fetch_transcript(self,video_id, include_timestamps=False):
         try:
             transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            transcript = transcript_list.find_transcript(['en']).fetch()
+            transcript = transcript_list.find_transcript([LANGUAGE_TO_FETCH]).fetch()
             if include_timestamps:
                 transcript_text = '\n'.join([f"[{self.format_timestamp(item['start'])}] {item['text']}" for item in transcript])
             else:
